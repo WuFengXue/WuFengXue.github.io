@@ -8,7 +8,10 @@
 <![endif]-->
   <input id="nm-switch" type="hidden" value="{{ site.nightMode }}"> {% include header.html %}
 
-  <header class="g-banner post-header {{ site.postPatterns | prepend: 'post-pattern-' }} {{ site.theme-color | prepend: 'bgcolor-' }} {% unless page.cover %}post-no-cover{% endunless %}" data-theme="{{ site.theme-color }}">
+  <header
+    class="g-banner post-header {{ site.postPatterns | prepend: 'post-pattern-' }} {{ site.theme-color | prepend: 'bgcolor-' }} {% unless page.cover %}post-no-cover{% endunless %}"
+    data-theme="{{ site.theme-color }}"
+  >
     <div class="post-wrapper">
       <div class="post-tags">
         {% if page.tags.size > 0 %}
@@ -19,7 +22,7 @@
       </div>
       <h1>{{ page.title }}</h1>
       <div class="post-meta">
-        <span class="post-meta-item"><i class="iconfont icon-author"></i><a href="{{ site.url }}" target="_blank" rel="author">{% if page.author %}{{ page.author }}{% else %}{{ site.author }}{% endif %}</a></></span>
+        <span class="post-meta-item"><i class="iconfont icon-author"></i>{% if page.author %}{{ page.author }}{% else %}{{ site.author }}{% endif %}</span>
         <time class="post-meta-item" datetime="{{ page.date | date:"%y-%m-%d" }}"><i class="iconfont icon-date"></i>{{ page.date | date_to_string }}</time>
       </div>
     </div>
@@ -95,9 +98,11 @@
       </div>
       {% endif %}
     </section>
+    {% if site.comments.disqus %}
     <section class="post-footer-item comment">
-      <div id="disqus_thread"></div>
+        <div id="disqus_thread"></div>
     </section>
+    {% endif %}
   </section>
 
   {% include footer.html %}
@@ -129,11 +134,9 @@
     };
     */
     (function() { // DON'T EDIT BELOW THIS LINE
-      var d = document,
-        s = d.createElement('script');
-      s.src = '{{ site.comments.disqus_url }}';
+      var d = document, s = d.createElement('script');
+      s.src = 'https://liaokeyu.disqus.com/embed.js';
       s.setAttribute('data-timestamp', +new Date());
-
       (d.head || d.body).appendChild(s);
     })();
   </script>
