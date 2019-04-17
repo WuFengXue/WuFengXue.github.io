@@ -8,6 +8,10 @@ cover: 'https://cn.bing.com/az/hprichbg/rb/RavenWolf_ZH-CN4544068603_1920x1080.j
 tags: android wechat silk
 ---
 
+## 微信语音编解码实现
+* （一）—— silk 移植
+* [（二）—— 支持微信语音](https://wufengxue.github.io/2019/04/17/wechat-voice-codec-amr.html)
+
 ## 配套源码
 [WeChatVoiceCodec](https://github.com/WuFengXue/WeChatVoiceCodec)
 

@@ -9,7 +9,7 @@ tags: android wechat silk
 ---
 
 ## 微信语音编解码实现
-* [（一）—— silk 移植](./2019-03-12-wechat-voice-codec-silk.md)
+* [（一）—— silk 移植](https://wufengxue.github.io/2019/03/12/wechat-voice-codec-silk.html)
 * （二）—— 支持微信语音
 
 ## 配套源码
