@@ -4,7 +4,7 @@ title: '微信语音编解码实现（一）—— silk 移植'
 subtitle: 'AndroidStudio 编译 silk 生成可在手机上运行的二进制文件'
 date: 2019-03-12
 categories: 技术
-cover: 'https://cn.bing.com/az/hprichbg/rb/RavenWolf_ZH-CN4544068603_1920x1080.jpg'
+cover: '../../../assets/img/post_bg/20190312.jpg'
 tags: android wechat silk
 ---
 
