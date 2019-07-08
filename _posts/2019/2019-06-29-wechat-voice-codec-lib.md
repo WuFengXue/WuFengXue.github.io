@@ -334,45 +334,214 @@ JNIEXPORT jint JNICALL Java_com_reinhard_wcvcodec_WcvCodec_encode2
 ```
 
 
-## 4.测试（待实现）
+## 3.测试
 
-### 4.1 在手机上创建测试文件夹
+### 3.1 新建一个 app 模块
 
-```shell
-adb shell "mkdir -p /data/local/tmp/lame/"
+&#160; &#160; &#160; &#160;AndroidStudio->File->New->New Module...->Phone And Tablet Module->创建带一个空界面的应用
+
+### 3.2 添加 libwcvcodec 库模块依赖
+
+&#160; &#160; &#160; &#160;修改 app 模块的 build.gradle 文件，在 dependencies 项下添加如下内容：
+
+```Gradle
+dependencies {
+    ……
+    implementation project(path: ':libwcvcodec')
+}
 ```
 
-### 4.2 将生成的可执行文件推到手机
+### 3.3 添加 sd 卡访问权限
 
-```shell
-cd xxx/WeChatVoiceCodec/lame/build/intermediates/cmake/release/obj/arm64-v8a/
-adb push lame /data/local/tmp/lame/
+&#160; &#160; &#160; &#160;修改 app 模块的清单文件 AndroidManifest.xml，添加如下内容：
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.reinhard.wechat.voicecodec">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application ...>
+        ...
+    </application>
+
+</manifest>
 ```
 
-### 4.3 将项目工程中测试用的 pcm 文件推到手机（由 [微信语音编解码实现（二）—— 支持微信语音](https://wufengxue.github.io/2019/04/17/wechat-voice-codec-amr.html) 生成）
+### 3.4 添加测试按钮
 
-### 4.6 测试编码
+&#160; &#160; &#160; &#160;修改 app 模块的布局文件 activity_main.xml，内容如下：
 
-将生成的 tmp.mp3 拉到电脑播放，验证 OK。
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
 
-### 4.7 测试解码
+    <Button
+        android:id="@+id/btn_amr_to_mp3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onClick"
+        android:text="amr_to_mp3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-```shell
-./lame --decode -t tmp.mp3 out.pcm
+    <Button
+        android:id="@+id/btn_pcm_to_amr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:onClick="onClick"
+        android:text="pcm_to_amr"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_amr_to_mp3" />
+
+    <Button
+        android:id="@+id/btn_mp3_to_amr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:onClick="onClick"
+        android:text="mp3_to_amr"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_pcm_to_amr" />
+
+</android.support.constraint.ConstraintLayout>
 ```
 
-执行上述命令后，会在当前路径生成 out.pcm，并输出以下内容：
+### 3.5 编写测试代码
 
-```shell
-lavender:/data/local/tmp/lame # ./lame --decode -t  tmp.mp3 out.pcm
-input:  tmp.mp3  (24 kHz, 1 channel, MPEG-2 Layer III)
-output: out.pcm  (16 bit, Microsoft WAVE)
-skipping initial 1105 samples (encoder+decoder delay)
-skipping final 47 samples (encoder padding-decoder delay)
-Frame#    72/72     128 kbps     
+&#160; &#160; &#160; &#160;修改 app 模块的 MainActivity，内容如下：
+
+```java
+package com.reinhard.wechat.voicecodec;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
+
+import com.reinhard.wcvcodec.WcvCodec;
+
+public class MainActivity extends Activity {
+    private static final String TAG = "WcvCodec";
+    private static final String TEST_DIR = "/sdcard/reinhard/";
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+    }
+
+    public void onClick(View view) {
+        int id = view.getId();
+        switch (id) {
+            case R.id.btn_amr_to_mp3:
+                testAmrToMp3();
+                break;
+            case R.id.btn_pcm_to_amr:
+                testPcmToAmr();
+                break;
+            case R.id.btn_mp3_to_amr:
+                testMp3ToAmr();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void testAmrToMp3() {
+        Log.d(TAG, "testAmrToMp3");
+        String amrPath = TEST_DIR + "in.amr";
+        String pcmPath = TEST_DIR + "out.pcm";
+        String mp3Path = TEST_DIR + "out.mp3";
+        if (WcvCodec.decode(amrPath, pcmPath, mp3Path) == 0) {
+            Toast.makeText(this, "testAmrToMp3 success", Toast.LENGTH_SHORT)
+                    .show();
+        }
+    }
+
+    private void testPcmToAmr() {
+        Log.d(TAG, "testPcmToAmr");
+        String pcmPath = TEST_DIR + "in.pcm";
+        String amrPath = TEST_DIR + "out.amr";
+        if (WcvCodec.encode(pcmPath, amrPath) == 0) {
+            Toast.makeText(this, "testPcmToAmr success", Toast.LENGTH_SHORT)
+                    .show();
+        }
+    }
+
+    private void testMp3ToAmr() {
+        Log.d(TAG, "testMp3ToAmr");
+        String mp3Path = TEST_DIR + "in.mp3";
+        String pcmPath = TEST_DIR + "out.pcm";
+        String amrPath = TEST_DIR + "out.amr";
+        if (WcvCodec.encode2(mp3Path, pcmPath, amrPath) == 0) {
+            Toast.makeText(this, "testMp3ToAmr success", Toast.LENGTH_SHORT)
+                    .show();
+        }
+    }
+}
 ```
 
-## 5. 参考
+&#160; &#160; &#160; &#160;___注意：demo 只做简单测试，所以直接将操作放在 UI 线程，实际使用时，应放到其他线程。___
+
+### 3.6 将测试用的音频文件推送到手机
+
+```shell
+cd xxx/WeChatVoiceCodec/libwcvcodec/test_vectors/
+adb shell mkdir -p /sdcard/reinhard/
+adb push wechat_voice.amr /sdcard/reinhard/in.amr
+adb push wechat_voice.mp3 /sdcard/reinhard/in.mp3
+adb push wechat_voice.pcm /sdcard/reinhard/in.pcm
+```
+
+### 3.7 将编译生成的 apk 安装到手机，并给予 sd 卡访问权限
+&#160; &#160; &#160; &#160;_说明：因为只是 demo，没有引入运行时权限申请，必要时可能需要手动到设置中配置。_
+
+### 3.8 测试编解码
+
+&#160; &#160; &#160; &#160;打开应用后，点击按钮进行测试，成功时会弹出吐司提示，并在 /sdcard/reinhard/ 文件夹生成对应的文件。按钮与测试功能对应关系如下：
+
+* amr_to_mp3 按钮：测试 amr->pcm->mp3
+* pcm_to_amr 按钮：测试 pcm->amr
+* mp3_to_amr 按钮：测试 mp3->pcm->amr
+
+&#160; &#160; &#160; &#160;可以将生成的文件拉取到电脑进行验证：
+
+* mp3 可以直接用电脑进行播放
+* amr 因为是微信语音文件，需要专门的方法进行验证，这里就不提供了
+
+## 4. 总结
+* 在某些场景下，通过扩展一个新的入口（类似代理），可以实现不修改或少修改第三方库的源码结构，便于后续同步库的更新内容
+* 将二进制程序移植为接口调用时，通过间接调用 main 方法（传入完整 cmd），可以大大提高灵活性
+
+## 5. 回顾与后续
+
+&#160; &#160; &#160; &#160;到此，本系列的文章基本完成了。
+
+&#160; &#160; &#160; &#160;在这些文章中，我尝试着去解答了为什么移植和怎么移植 silk 和 lame 库的问题，但还是存在一些疑惑和可以改进的点：
+
+* 疑惑：在调用 silk 和 lame 时，传入的参数配置是怎么确定的？（大部分直接来自参考资源）
+* 待改进：将库编译后上传到 maven 之类的托管网站，实现直接使用 gradle 依赖导入
+
+&#160; &#160; &#160; &#160;对于疑惑点，可能需要进一步学习语音编解码相关的知识才能解答；至于待改进的点，就留待以后有时间了再实现吧。
+
+## 6. 参考
 
 * [开源项目 - Silk_v3_decoder](https://github.com/fishCoder/Silk_v3_decoder)
 
