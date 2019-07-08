@@ -4,7 +4,7 @@ title: '微信语音编解码实现（四）—— 整合 so 库'
 subtitle: '直接使用 JNI 调用实现微信语音编解码'
 date: 2019-06-29
 categories: 技术
-cover: 'https://cn.bing.com/th?id=OHR.PantheraLeoDad_ZH-CN9580668524_1920x1080.jpg&rf=LaDigue_1920x1080.jpg&pid=hp'
+cover: '../../../assets/img/post_bg/20190629.jpg'
 tags: android JNI
 ---
 

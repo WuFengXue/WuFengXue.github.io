@@ -4,7 +4,7 @@ title: '微信语音编解码实现（三）—— lame 移植'
 subtitle: '使用 lame 实现 pcm 和 mp3 格式的相互转换'
 date: 2019-05-25
 categories: 技术
-cover: 'https://cn.bing.com/th?id=OHR.YukonEmerald_ZH-CN1893750172_1920x1080.jpg'
+cover: '../../../assets/img/post_bg/20190525.jpg'
 tags: android lame
 ---
 

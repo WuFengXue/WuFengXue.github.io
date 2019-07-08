@@ -4,7 +4,7 @@ title: '微信语音编解码实现（二）—— 支持微信语音'
 subtitle: '使用 silk 编解码微信语音文件'
 date: 2019-04-17
 categories: 技术
-cover: 'https://cn.bing.com/th?id=OHR.BagpipeOpera_ZH-CN9506207351_1920x1080.jpg'
+cover: '../../../assets/img/post_bg/20190417.jpg'
 tags: android wechat silk
 ---
 
