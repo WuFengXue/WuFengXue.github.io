@@ -11,6 +11,8 @@ tags: android wechat silk
 ## 微信语音编解码实现
 * （一）—— silk 移植
 * [（二）—— 支持微信语音](https://wufengxue.github.io/2019/04/17/wechat-voice-codec-amr.html)
+* [（三）—— lame 移植](https://wufengxue.github.io/2019/05/25/wechat-voice-codec-lame.html)
+* [（四）—— 整合 so 库](https://wufengxue.github.io/2019/06/29/wechat-voice-codec-lib.html)
 
 ## 配套源码
 [WeChatVoiceCodec](https://github.com/WuFengXue/WeChatVoiceCodec)
