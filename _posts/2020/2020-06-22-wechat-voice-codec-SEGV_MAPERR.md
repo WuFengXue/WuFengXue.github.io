@@ -726,3 +726,12 @@ index c35d23f..975c4c8 100644
 	* 非 Root 设备可以通过 adb bugreport 命令获取
 * android 主线程栈默认大小可以通过输入 adb shell "ulimit -s" 查看（6.0为8M）
 * android 子线程栈默认大小为1M左右（不同版本不一样，略小于1M）
+
+
+## 附：微信语音编解码实现
+
+* [（一）—— silk 移植](https://wufengxue.github.io/2019/03/12/wechat-voice-codec-silk.html)
+* [（二）—— 支持微信语音](https://wufengxue.github.io/2019/04/17/wechat-voice-codec-amr.html)
+* [（三）—— lame 移植](https://wufengxue.github.io/2019/05/25/wechat-voice-codec-lame.html)
+* [（四）—— 整合 so 库](https://wufengxue.github.io/2019/06/29/wechat-voice-codec-lib.html)
+* （五）——工作线程编解码

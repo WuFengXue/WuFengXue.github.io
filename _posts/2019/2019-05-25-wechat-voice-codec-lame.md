@@ -13,6 +13,7 @@ tags: android lame
 * [（二）—— 支持微信语音](https://wufengxue.github.io/2019/04/17/wechat-voice-codec-amr.html)
 * （三）—— lame 移植
 * [（四）—— 整合 so 库](https://wufengxue.github.io/2019/06/29/wechat-voice-codec-lib.html)
+* [（五）——工作线程编解码](https://wufengxue.github.io/2020/06/22/wechat-voice-codec-SEGV_MAPERR.html)
 
 ## 配套源码
 [WeChatVoiceCodec](https://github.com/WuFengXue/WeChatVoiceCodec)
